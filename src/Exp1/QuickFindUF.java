@@ -13,10 +13,15 @@ public class QuickFindUF {
      * @param  n the number of sites
      * @throws IllegalArgumentException if {@code n < 0}
      */
-    public QuickFindUF(int n) {
+    QuickFindUF(int n) {
         count = n;
         id = new int[n];
         for (int i = 0; i < n; i++)
+            id[i] = i;
+    }
+
+    public void reset(){
+        for (int i = 0; i < count; i++)
             id[i] = i;
     }
 
@@ -59,7 +64,7 @@ public class QuickFindUF {
      * @throws IllegalArgumentException unless
      *         both {@code 0 <= p < n} and {@code 0 <= q < n}
      */
-    public boolean connected(int p, int q) {
+    boolean connected(int p, int q) {
         validate(p);
         validate(q);
         return id[p] == id[q];
@@ -74,7 +79,7 @@ public class QuickFindUF {
      * @throws IllegalArgumentException unless
      *         both {@code 0 <= p < n} and {@code 0 <= q < n}
      */
-    public void union(int p, int q) {
+    void union(int p, int q) {
         validate(p);
         validate(q);
         int pID = id[p];   // needed for correctness
