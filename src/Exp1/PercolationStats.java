@@ -5,17 +5,19 @@ import java.util.Random;
 public class PercolationStats {
 
     private double[] array;
-    private int T;
+    private int T, N;
     public Percolation per;
     private double sum=0,avg=0,var=0;
 
-    private void PercolationStats_x(int N,int T) {
+    private void simulate(int N, int T) {
         this.T = T;
-        per = new Percolation(N);
-
+        this.N = N;
 
         array = new double[T];
-
+        for (int i = 0 ; i < T ; i ++){
+            Session s = new Session();
+            array[i] = s.one(N);
+        }
     }   // perform T independent computational experiments on an N-by-N grid
     private double mean(){
         double sum = 0;
@@ -47,54 +49,48 @@ public class PercolationStats {
         System.out.println("置信区间上限：");
         return avg+1.96*var;
     }      // returns upper bound of the 95% confidence interval
-    private void runOnce(double p){
-        Random r = new Random();
-        per.generate(p);
-        for (int i = 2; i <= per.N; i++) {
-            for (int j = 1; j <= per.N; j++) {
-                if(per.isOpen(i, j)){
-                    // 向上检查
-                    if(per.isOpen(i, j-1))
-                        per.qf.union(per.grid[i][j], per.grid[i][j-1]);
-                    // 向左检查
-                    if(j != 1 && per.isOpen(i-1, j))
-                        per.qf.union(per.grid[i][j], per.grid[i-1][j]);
-                }
-            }
-        }
+//    private void runOnce(double p){
+//        Random r = new Random();
+//        per.generate(p);
+//        for (int i = 2; i <= per.N; i++) {
+//            for (int j = 1; j <= per.N; j++) {
+//                if(per.isOpen(i, j)){
+//                    // 向上检查
+//                    if(per.isOpen(i, j-1))
+//                        per.qf.union(per.grid[i][j], per.grid[i][j-1]);
+//                    // 向左检查
+//                    if(j != 1 && per.isOpen(i-1, j))
+//                        per.qf.union(per.grid[i][j], per.grid[i-1][j]);
+//                }
+//            }
+//        }
+//
+//    }
 
-    }
-
-    private void simulate(){
-        for(int i = 0; i < T; i++){
-
-            double p = 0.1;
-
-            while(true){
-                runOnce(p);
-                if(per.percolates()){
-                    array[i] = p;
-                    break;
-                }
-                per.qf.reset();
-                p += 0.1;
-            }
-        }
-    }
+//    private void simulate(){
+//        for(int i = 0; i < T; i++){
+//
+//            double p = 0.1;
+//
+//            while(true){
+//                runOnce(p);
+//                if(per.percolates()){
+//                    array[i] = p;
+//                    break;
+//                }
+//                per.qf.reset();
+//                p += 0.1;
+//            }
+//        }
+//    }
 
     public static void main(String[] args)   {
-//        System.out.println("请输入方格的规格：");
-//        int N = System.out.readInt();
-//        System.out.println("请输入实验的次数：");
-//        int T = System.out.readInt();
-
-
         long starttime = System.currentTimeMillis();
         PercolationStats q = new PercolationStats();
 
-        q.simulate();
+//        q.PercolationStats_x(N, T);
 
-//        q.PercolationStats_x(10,10);
+        q.simulate(200,100);
 
         long endtime = System.currentTimeMillis();
         System.out.println("运行时间为:"+(endtime-starttime)+"ms");
